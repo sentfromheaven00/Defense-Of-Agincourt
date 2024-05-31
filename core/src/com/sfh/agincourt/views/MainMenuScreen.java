@@ -19,11 +19,13 @@ public class MainMenuScreen extends ScreenAdapter {
 
     class LogoActor extends Actor {
         Sprite logo;
+        final int LOGO_HEIGHT = (int) (game.VIEWPORT_HEIGHT * .4);
+        final int LOGO_WIDTH = LOGO_HEIGHT * 2;
 
         public LogoActor() {
             logo = new Sprite(new Texture(Gdx.files.internal("logo.png")));
-            logo.setBounds(200, 200, logo.getWidth() / 2, logo.getHeight() / 2);
-            this.setBounds(200, 200, logo.getWidth() / 2, logo.getHeight() / 2);
+            this.setBounds(game.VIEWPORT_WIDTH / 2 - LOGO_WIDTH / 2, game.VIEWPORT_HEIGHT - 80 - LOGO_HEIGHT, LOGO_WIDTH, LOGO_HEIGHT);
+            logo.setBounds(getX(), getY(), getWidth(), getHeight());
         }
 
         @Override
@@ -33,21 +35,51 @@ public class MainMenuScreen extends ScreenAdapter {
 
     }
 
+    class PlayButton extends Actor {
+        Sprite button;
+        final int BUTTON_HEIGHT = (int) (game.VIEWPORT_HEIGHT * .2);
+        final int BUTTON_WIDTH = BUTTON_HEIGHT * 2;
+
+        public PlayButton() {
+            button = new Sprite(new Texture(Gdx.files.internal("play_button.png")));
+            this.setBounds((game.VIEWPORT_WIDTH / 2) - (BUTTON_WIDTH / 2), (int) (camera.viewportHeight * 0.38) - (int) (BUTTON_HEIGHT * .618), BUTTON_WIDTH, BUTTON_HEIGHT);
+            button.setBounds(getX(), getY(), getWidth(), getHeight());
+            this.setTouchable(Touchable.enabled);
+
+            this.addListener(new InputListener() {
+                public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                    return true;
+                }
+
+                public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                    System.out.println("up");
+                    game.changeScreen(Agincourt.PLAY);
+
+                }
+            });
+        }
+
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            button.draw(batch);
+        }
+    }
 
     private Agincourt game;
     private BitmapFont font;
-    private OrthographicCamera camera;
     private Stage stage;
+    private OrthographicCamera camera;
     private FitViewport viewport;
 
     public MainMenuScreen(Agincourt agincourt) {
         game = agincourt;
+        camera = game.camera;
+        viewport = game.viewport;
         font = game.font;
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
-        viewport = new FitViewport(800, 480, camera);
         stage = new Stage(viewport, game.batch);
         stage.addActor(new LogoActor());
+        stage.addActor(new PlayButton());
         game.batch.setProjectionMatrix(camera.combined);
     }
 
@@ -67,6 +99,11 @@ public class MainMenuScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    @Override
+    public void hide() {
+        Gdx.input.setInputProcessor(null);
     }
 
     @Override
