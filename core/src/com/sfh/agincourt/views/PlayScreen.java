@@ -10,51 +10,33 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sfh.agincourt.Agincourt;
+import com.sfh.agincourt.actors.Zombie;
 
 public class PlayScreen extends ScreenAdapter {
 
-    class MapActor extends Actor {
-        Sprite map;
-        int MAP_HEIGHT;
-        int MAP_WIDTH;
-
-        public MapActor() {
-            map = new Sprite(new Texture(Gdx.files.internal("map_1.png")));
-            MAP_HEIGHT = (int) (game.VIEWPORT_HEIGHT * .9);
-            MAP_WIDTH = (MAP_HEIGHT * map.getTexture().getWidth() / map.getTexture().getHeight());
-
-            this.setBounds(0, game.VIEWPORT_HEIGHT - MAP_HEIGHT, MAP_WIDTH, MAP_HEIGHT);
-            map.setBounds(getX(), getY(), getWidth(), getHeight());
-        }
-
-        @Override
-        public void draw(Batch batch, float parentAlpha) {
-            map.draw(batch);
-        }
-
-    }
-
+    public static final int MAP_HEIGHT = 720;
+    public static final int MAP_WIDTH = 1280;
     private Agincourt game;
     private BitmapFont font;
     private Stage stage;
     private OrthographicCamera camera;
-    private FitViewport viewport;
-
+    private Viewport viewport;
     private ShapeRenderer shapeRenderer;
     private Rectangle rectangle;
-
     public PlayScreen(Agincourt agincourt) {
         game = agincourt;
         camera = game.camera;
         viewport = game.viewport;
         font = game.font;
         stage = new Stage(viewport, game.batch);
-        stage.addActor(new MapActor());
+        stage.addActor(new Background());
+        stage.addActor(new Map1());
+        stage.addActor(new Zombie());
         game.batch.setProjectionMatrix(camera.combined);
-
 
         stage.setDebugAll(true);
     }
@@ -87,4 +69,38 @@ public class PlayScreen extends ScreenAdapter {
         stage.getViewport().update(width, height, false);
     }
 
+    class Map1 extends Actor {
+        Sprite mapSprite;
+        int MAP_HEIGHT;
+        int MAP_WIDTH;
+
+        public Map1() {
+            mapSprite = new Sprite(new Texture(Gdx.files.internal("monkey_meadow.png")));
+            MAP_HEIGHT = game.VIEWPORT_HEIGHT;
+            MAP_WIDTH = (MAP_HEIGHT * mapSprite.getTexture().getWidth() / mapSprite.getTexture().getHeight());
+            this.setBounds(0, game.VIEWPORT_HEIGHT - MAP_HEIGHT, MAP_WIDTH, MAP_HEIGHT);
+            mapSprite.setBounds(getX(), getY(), getWidth(), getHeight());
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            mapSprite.draw(batch);
+        }
+    }
+
+    // Make a class for an actor that will fill the entire viewport using the texture "missing.jpeg" and set its bounds to the viewport's bounds.
+    class Background extends Actor {
+        Sprite backgroundSprite;
+
+        public Background() {
+            backgroundSprite = new Sprite(new Texture(Gdx.files.internal("missing.jpeg")));
+            this.setBounds(0, 0, game.VIEWPORT_WIDTH, game.VIEWPORT_HEIGHT);
+            backgroundSprite.setBounds(getX(), getY(), getWidth(), getHeight());
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            backgroundSprite.draw(batch);
+        }
+    }
 }
