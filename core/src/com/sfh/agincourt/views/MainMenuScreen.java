@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sfh.agincourt.Agincourt;
 
@@ -24,6 +23,7 @@ public class MainMenuScreen extends ScreenAdapter {
     private Stage stage;
     private OrthographicCamera camera;
     private Viewport viewport;
+
     public MainMenuScreen(Agincourt agincourt) {
         game = agincourt;
         camera = game.camera;

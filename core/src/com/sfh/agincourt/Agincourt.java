@@ -2,12 +2,12 @@ package com.sfh.agincourt;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sfh.agincourt.views.MainMenuScreen;
 import com.sfh.agincourt.views.PlayScreen;
@@ -23,6 +23,7 @@ public class Agincourt extends Game {
     public Viewport viewport;
     public int VIEWPORT_HEIGHT;
     public int VIEWPORT_WIDTH;
+    public Music music;
     private MainMenuScreen mainMenuScreen;
     private PlayScreen playScreen;
 
@@ -49,7 +50,10 @@ public class Agincourt extends Game {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         viewport = new FitViewport(VIEWPORT_WIDTH, VIEWPORT_HEIGHT, camera);
-
+        music = Gdx.audio.newMusic(Gdx.files.internal("trick.wav"));
+        music.setLooping(true);
+        music.setVolume(0.1f);
+//        music.play();
         changeScreen(MENU);
     }
 
@@ -58,6 +62,7 @@ public class Agincourt extends Game {
         batch.dispose();
         shapeRenderer.dispose();
         font.dispose();
+        music.dispose();
     }
 
 }

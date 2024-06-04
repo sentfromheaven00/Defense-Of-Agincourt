@@ -11,15 +11,19 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sfh.agincourt.Agincourt;
+import com.sfh.agincourt.Direction;
 import com.sfh.agincourt.actors.Zombie;
 
 public class PlayScreen extends ScreenAdapter {
 
     public static final int MAP_HEIGHT = 720;
     public static final int MAP_WIDTH = 1280;
+    private static float hp = 100;
     private Agincourt game;
     private BitmapFont font;
     private Stage stage;
@@ -27,6 +31,7 @@ public class PlayScreen extends ScreenAdapter {
     private Viewport viewport;
     private ShapeRenderer shapeRenderer;
     private Rectangle rectangle;
+
     public PlayScreen(Agincourt agincourt) {
         game = agincourt;
         camera = game.camera;
@@ -35,10 +40,46 @@ public class PlayScreen extends ScreenAdapter {
         stage = new Stage(viewport, game.batch);
         stage.addActor(new Background());
         stage.addActor(new Map1());
-        stage.addActor(new Zombie());
+        Zombie zombie = new Zombie();
+        stage.addActor(zombie);
+
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                Gdx.app.log("Stage Listener", "keyDown. keycode=" + keycode);
+                switch (keycode) {
+                    case 52:
+                        Gdx.app.log("PlayScreen", "X: " + (int) zombie.getX() + " Y: " + (int) zombie.getY());
+                        zombie.setPosition(Gdx.input.getX() * viewport.getWorldWidth() / Gdx.graphics.getWidth(), viewport.getWorldHeight() - Gdx.input.getY());
+                        break;
+                    case 51:
+                        zombie.direction = Direction.UP;
+                        break;
+                    case 47:
+                        zombie.direction = Direction.DOWN;
+                        break;
+                    case 29:
+                        zombie.direction = Direction.LEFT;
+                        break;
+                    case 32:
+                        zombie.direction = Direction.RIGHT;
+                        break;
+                    case 42:
+                        stage.addActor(new Zombie());
+                }
+
+
+                return true;
+            }
+        });
+
         game.batch.setProjectionMatrix(camera.combined);
 
         stage.setDebugAll(true);
+    }
+
+    public static void takeDamage(float damage) {
+        hp -= damage;
     }
 
     @Override
@@ -51,8 +92,10 @@ public class PlayScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         viewport.apply();
+
         stage.act(delta);
         stage.draw();
+        Gdx.app.log("PlayScreen", "HP: " + hp);
     }
 
     @Override
