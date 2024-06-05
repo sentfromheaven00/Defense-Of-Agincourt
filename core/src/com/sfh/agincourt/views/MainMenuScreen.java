@@ -18,17 +18,14 @@ import com.sfh.agincourt.Agincourt;
 
 public class MainMenuScreen extends ScreenAdapter {
 
-    private Agincourt game;
-    private BitmapFont font;
-    private Stage stage;
-    private OrthographicCamera camera;
-    private Viewport viewport;
+    private final Agincourt game;
+    private final Stage stage;
+    private final OrthographicCamera camera;
 
     public MainMenuScreen(Agincourt agincourt) {
         game = agincourt;
         camera = game.camera;
-        viewport = game.viewport;
-        font = game.font;
+        Viewport viewport = game.viewport;
         stage = new Stage(viewport, game.batch);
         stage.addActor(new LogoActor());
         stage.addActor(new PlayButton());
@@ -66,7 +63,7 @@ public class MainMenuScreen extends ScreenAdapter {
     class LogoActor extends Actor {
         final int LOGO_HEIGHT = (int) (game.VIEWPORT_HEIGHT * .4);
         final int LOGO_WIDTH = LOGO_HEIGHT * 2;
-        Sprite logo;
+        final Sprite logo;
 
         public LogoActor() {
             logo = new Sprite(new Texture(Gdx.files.internal("logo.png")));
@@ -84,7 +81,7 @@ public class MainMenuScreen extends ScreenAdapter {
     class PlayButton extends Actor {
         final int BUTTON_HEIGHT = (int) (game.VIEWPORT_HEIGHT * .2);
         final int BUTTON_WIDTH = BUTTON_HEIGHT * 2;
-        Sprite button;
+        final Sprite button;
 
         public PlayButton() {
             button = new Sprite(new Texture(Gdx.files.internal("play_button.png")));

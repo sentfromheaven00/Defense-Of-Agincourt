@@ -15,16 +15,11 @@ import com.sfh.agincourt.Direction;
 import com.sfh.agincourt.views.PlayScreen;
 
 public class Zombie extends Actor {
-    // TODO: Implement ZombieActor
-    // Write a class for ZombieActor that extends Actor that will be used to represent a zombie in
-    // the game. It will use the texture zombie1_left.png. It will need values for its speed, its HP, the damage that it does to the player's HP.
-
-    // Write the class below using PlayScreen.java as a reference.
-    public Sprite zombieSprite;
-    public float damage = 2.0f;
-    public float speed = 5.0f;
+    public final Sprite zombieSprite;
+    public final float damage = 2.0f;
+    public final float speed = 5.0f;
     public Direction direction = Direction.RIGHT;
-    JsonValue path = new JsonReader().parse(Gdx.files.internal("path.json"));
+    final JsonValue path = new JsonReader().parse(Gdx.files.internal("path.json"));
 
     public Zombie() {
         zombieSprite = new Sprite(new Texture("zombie1_left.png"));
@@ -39,7 +34,7 @@ public class Zombie extends Actor {
         this.addListener(new DragListener() {
             public void drag(InputEvent event, float x, float y, int pointer) {
                 moveBy(x - getWidth() / 2, y - getHeight() / 2);
-                Gdx.app.log("Zombie", "X: " + (int) getX() + " Y: " + (int) getY());
+//                Gdx.app.log("Zombie", "X: " + (int) getX() + " Y: " + (int) getY());
             }
         });
     }
@@ -51,7 +46,7 @@ public class Zombie extends Actor {
         for (JsonValue point : path) {
             Vector2 v = new Vector2(point.getFloat("x"), point.getFloat("y"));
             if (Math.abs(v.dst(getX(), getY())) < 5) {
-                Gdx.app.log("Zombie", "X: " + (int) getX() + " Y: " + (int) getY());
+//                Gdx.app.log("Zombie", "X: " + (int) getX() + " Y: " + (int) getY());
                 switch (point.getString("direction")) {
                     case "UP":
                         direction = Direction.UP;

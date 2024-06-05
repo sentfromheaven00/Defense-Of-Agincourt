@@ -11,12 +11,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sfh.agincourt.Agincourt;
 import com.sfh.agincourt.Direction;
+import com.sfh.agincourt.Wave;
 import com.sfh.agincourt.actors.Zombie;
 
 public class PlayScreen extends ScreenAdapter {
@@ -24,57 +26,39 @@ public class PlayScreen extends ScreenAdapter {
     public static final int MAP_HEIGHT = 720;
     public static final int MAP_WIDTH = 1280;
     private static float hp = 100;
-    private Agincourt game;
-    private BitmapFont font;
-    private Stage stage;
-    private OrthographicCamera camera;
-    private Viewport viewport;
+    private final Agincourt game;
+    public static Stage stage;
+    private final Viewport viewport;
     private ShapeRenderer shapeRenderer;
     private Rectangle rectangle;
+    public static Group zombies;
 
     public PlayScreen(Agincourt agincourt) {
         game = agincourt;
-        camera = game.camera;
+        OrthographicCamera camera = game.camera;
         viewport = game.viewport;
-        font = game.font;
         stage = new Stage(viewport, game.batch);
+        zombies = new Group();
+//        zombies.setBounds(0, 0, game.VIEWPORT_WIDTH, game.VIEWPORT_HEIGHT);
+        game.batch.setProjectionMatrix(camera.combined);
+
         stage.addActor(new Background());
         stage.addActor(new Map1());
-        Zombie zombie = new Zombie();
-        stage.addActor(zombie);
 
+        stage.addActor(zombies);
+        zombies.addActor(new Zombie());
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 Gdx.app.log("Stage Listener", "keyDown. keycode=" + keycode);
-                switch (keycode) {
-                    case 52:
-                        Gdx.app.log("PlayScreen", "X: " + (int) zombie.getX() + " Y: " + (int) zombie.getY());
-                        zombie.setPosition(Gdx.input.getX() * viewport.getWorldWidth() / Gdx.graphics.getWidth(), viewport.getWorldHeight() - Gdx.input.getY());
-                        break;
-                    case 51:
-                        zombie.direction = Direction.UP;
-                        break;
-                    case 47:
-                        zombie.direction = Direction.DOWN;
-                        break;
-                    case 29:
-                        zombie.direction = Direction.LEFT;
-                        break;
-                    case 32:
-                        zombie.direction = Direction.RIGHT;
-                        break;
-                    case 42:
-                        stage.addActor(new Zombie());
+                if (keycode == 42) {
+                    zombies.addActor(new Zombie());
                 }
-
-
                 return true;
             }
         });
 
-        game.batch.setProjectionMatrix(camera.combined);
-
+        Wave.spawnWave(0);
         stage.setDebugAll(true);
     }
 
@@ -95,7 +79,7 @@ public class PlayScreen extends ScreenAdapter {
 
         stage.act(delta);
         stage.draw();
-        Gdx.app.log("PlayScreen", "HP: " + hp);
+//        Gdx.app.log("PlayScreen", "HP: " + hp);
     }
 
     @Override
@@ -113,9 +97,9 @@ public class PlayScreen extends ScreenAdapter {
     }
 
     class Map1 extends Actor {
-        Sprite mapSprite;
-        int MAP_HEIGHT;
-        int MAP_WIDTH;
+        final Sprite mapSprite;
+        final int MAP_HEIGHT;
+        final int MAP_WIDTH;
 
         public Map1() {
             mapSprite = new Sprite(new Texture(Gdx.files.internal("monkey_meadow.png")));
@@ -133,10 +117,10 @@ public class PlayScreen extends ScreenAdapter {
 
     // Make a class for an actor that will fill the entire viewport using the texture "missing.jpeg" and set its bounds to the viewport's bounds.
     class Background extends Actor {
-        Sprite backgroundSprite;
+        final Sprite backgroundSprite;
 
         public Background() {
-            backgroundSprite = new Sprite(new Texture(Gdx.files.internal("missing.jpeg")));
+            backgroundSprite = new Sprite(new Texture(Gdx.files.internal("missing.jpg")));
             this.setBounds(0, 0, game.VIEWPORT_WIDTH, game.VIEWPORT_HEIGHT);
             backgroundSprite.setBounds(getX(), getY(), getWidth(), getHeight());
         }
