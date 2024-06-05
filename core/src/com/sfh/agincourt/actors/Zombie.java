@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.sfh.agincourt.Agincourt;
 import com.sfh.agincourt.Direction;
 import com.sfh.agincourt.views.PlayScreen;
 
@@ -21,12 +22,15 @@ public class Zombie extends Actor {
     public Direction direction = Direction.RIGHT;
     final JsonValue path = new JsonReader().parse(Gdx.files.internal("path.json"));
 
+    float pathMultiplierX = Agincourt.VIEWPORT_WIDTH / 1500f;
+    float pathMultiplierY = Agincourt.VIEWPORT_HEIGHT / 840f;
+
     public Zombie() {
         zombieSprite = new Sprite(new Texture("zombie1_left.png"));
         setOrigin(45, 0);
         zombieSprite.setOrigin(45, 0);
         zombieSprite.flip(true, false);
-        setBounds(-20, 480, zombieSprite.getWidth() * .2f, zombieSprite.getHeight() * .2f);
+        setBounds(-20, path.get(0).getFloat("y") * pathMultiplierY, zombieSprite.getWidth() * .2f * pathMultiplierX, zombieSprite.getHeight() * .2f * pathMultiplierY);
         zombieSprite.setBounds(getX(), getY(), getWidth(), getHeight());
         this.setTouchable(Touchable.enabled);
 
@@ -44,8 +48,8 @@ public class Zombie extends Actor {
         zombieSprite.setBounds(getX(), getY(), getWidth(), getHeight());
 
         for (JsonValue point : path) {
-            Vector2 v = new Vector2(point.getFloat("x"), point.getFloat("y"));
-            if (Math.abs(v.dst(getX(), getY())) < 5) {
+            Vector2 v = new Vector2(point.getFloat("x") * pathMultiplierX, point.getFloat("y") * pathMultiplierY);
+            if (Math.abs(v.dst(getX(), getY())) < 6) {
 //                Gdx.app.log("Zombie", "X: " + (int) getX() + " Y: " + (int) getY());
                 switch (point.getString("direction")) {
                     case "UP":

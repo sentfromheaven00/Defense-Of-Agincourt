@@ -20,8 +20,8 @@ public class Agincourt extends Game {
     public ShapeRenderer shapeRenderer;
     public OrthographicCamera camera;
     public Viewport viewport;
-    public int VIEWPORT_HEIGHT;
-    public int VIEWPORT_WIDTH;
+    public static int VIEWPORT_HEIGHT;
+    public static int VIEWPORT_WIDTH;
     public Music music;
     private MainMenuScreen mainMenuScreen;
     private PlayScreen playScreen;

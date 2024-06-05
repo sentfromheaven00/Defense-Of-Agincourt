@@ -9,7 +9,8 @@ public class DesktopLauncher {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setForegroundFPS(60);
         config.setTitle("Defense of Agincourt");
-        config.setMaximized(true);
+        config.setResizable(false);
+        config.setWindowedMode(1600, 900);
         new Lwjgl3Application(new Agincourt(), config);
     }
 }
