@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.sfh.agincourt.actors.Zombie;
 import com.sfh.agincourt.views.PlayScreen;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Interface for managing waves of enemies in the game.
  * It uses a JSON file to define the characteristics of each wave.
@@ -40,6 +42,29 @@ public interface Wave {
         } catch (Exception e) {
             Gdx.app.log("Wave", "Error spawning wave " + waveNumber, e);
         }
+    }
 
+    static void startWaves() {
+        AtomicBoolean isWaveActive = new AtomicBoolean(false);
+        Thread waveThread = new Thread(() -> {
+            int i = 0;
+            while (i < waves.size) {
+                if (zombies.getChildren().size == 0)
+                    isWaveActive.set(false);
+                if (!isWaveActive.get()) {
+                    isWaveActive.set(true);
+                    spawnWave(i);
+                    i++;
+                }
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Thread.yield();
+            }
+        });
+        waveThread.setDaemon(true);
+        waveThread.start();
     }
 }

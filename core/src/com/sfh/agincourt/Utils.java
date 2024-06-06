@@ -34,8 +34,8 @@ public interface Utils {
         new Thread(() -> {
             for (int i = 0; i < times; i++) {
                 long time = System.currentTimeMillis();
-                while (System.currentTimeMillis() < time + (delay * 1000)){}
                 Gdx.app.postRunnable(runnable);
+                while (System.currentTimeMillis() < time + (delay * 1000)){}
             }
         }).start();
     }

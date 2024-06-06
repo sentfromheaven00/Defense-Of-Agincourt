@@ -32,6 +32,7 @@ public class PlayScreen extends ScreenAdapter {
     private ShapeRenderer shapeRenderer;
     private Rectangle rectangle;
     public static Group zombies;
+    public boolean isWaveActive = false;
 
     public PlayScreen(Agincourt agincourt) {
         game = agincourt;
@@ -46,7 +47,6 @@ public class PlayScreen extends ScreenAdapter {
         stage.addActor(new Map1());
 
         stage.addActor(zombies);
-        zombies.addActor(new Zombie());
         stage.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
@@ -58,7 +58,7 @@ public class PlayScreen extends ScreenAdapter {
             }
         });
 
-        Wave.spawnWave(0);
+        Wave.startWaves();
         stage.setDebugAll(true);
     }
 
@@ -76,9 +76,9 @@ public class PlayScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         viewport.apply();
-
         stage.act(delta);
         stage.draw();
+//        Gdx.app.log("PlayScreen", "Zombies: " + zombies.getChildren().size);
 //        Gdx.app.log("PlayScreen", "HP: " + hp);
     }
 
