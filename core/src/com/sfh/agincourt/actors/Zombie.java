@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,9 +17,9 @@ import com.sfh.agincourt.Direction;
 import com.sfh.agincourt.views.PlayScreen;
 
 public class Zombie extends Actor {
-    public final Sprite zombieSprite;
-    public final float damage = 2.0f;
-    public final float speed = 5.0f;
+    public Sprite zombieSprite;
+    public float damage;
+    public float speed;
     public Direction direction = Direction.RIGHT;
     final JsonValue path = new JsonReader().parse(Gdx.files.internal("path.json"));
 
@@ -26,21 +27,26 @@ public class Zombie extends Actor {
     float pathMultiplierY = Agincourt.VIEWPORT_HEIGHT / 840f;
 
     public Zombie() {
-        zombieSprite = new Sprite(new Texture("zombie1_left.png"));
+        damage = 5;
+        speed = 100;
+        zombieSprite = new Sprite(new Texture("zombie/zombie.png"));
         setOrigin(45, 0);
         zombieSprite.setOrigin(45, 0);
         zombieSprite.flip(true, false);
         setBounds(-20, path.get(0).getFloat("y") * pathMultiplierY, zombieSprite.getWidth() * .2f * pathMultiplierX, zombieSprite.getHeight() * .2f * pathMultiplierY);
         zombieSprite.setBounds(getX(), getY(), getWidth(), getHeight());
-        this.setTouchable(Touchable.enabled);
 
+//        this.setTouchable(Touchable.enabled);
+//        this.addListener(new DragListener() {
+//            public void drag(InputEvent event, float x, float y, int pointer) {
+//                moveBy(x - getWidth() / 2, y - getHeight() / 2);
+////                Gdx.app.log("Zombie", "X: " + (int) getX() + " Y: " + (int) getY());
+//            }
+//        });
+    }
 
-        this.addListener(new DragListener() {
-            public void drag(InputEvent event, float x, float y, int pointer) {
-                moveBy(x - getWidth() / 2, y - getHeight() / 2);
-//                Gdx.app.log("Zombie", "X: " + (int) getX() + " Y: " + (int) getY());
-            }
-        });
+    public Rectangle getBounds() {
+        return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
     @Override
@@ -69,10 +75,10 @@ public class Zombie extends Actor {
         }
         switch (direction) {
             case UP:
-                setPosition(getX(), getY() + speed);
+                setPosition(getX(), getY() + speed * Gdx.graphics.getDeltaTime());
                 break;
             case DOWN:
-                setPosition(getX(), getY() - speed);
+                setPosition(getX(), getY() - speed * Gdx.graphics.getDeltaTime());
                 break;
             case LEFT:
                 if (zombieSprite.isFlipX()) {
@@ -80,7 +86,7 @@ public class Zombie extends Actor {
                     setOriginX(-1 * getOriginX());
                     zombieSprite.setOrigin(-1 * getOriginX(), getOriginY());
                 }
-                setPosition(getX() - speed, getY());
+                setPosition(getX() - speed * Gdx.graphics.getDeltaTime(), getY());
                 break;
             case RIGHT:
                 if (!zombieSprite.isFlipX()) {
@@ -88,7 +94,7 @@ public class Zombie extends Actor {
                     setOriginX(-1 * getOriginX());
                     zombieSprite.setOrigin(-1 * getOriginX(), getOriginY());
                 }
-                setPosition(getX() + speed, getY());
+                setPosition(getX() + speed * Gdx.graphics.getDeltaTime(), getY());
                 break;
         }
 

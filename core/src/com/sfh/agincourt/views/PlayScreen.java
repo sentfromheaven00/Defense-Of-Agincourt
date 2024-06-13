@@ -1,6 +1,8 @@
 package com.sfh.agincourt.views;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -19,6 +21,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.sfh.agincourt.Agincourt;
 import com.sfh.agincourt.Direction;
 import com.sfh.agincourt.Wave;
+import com.sfh.agincourt.actors.Tower;
 import com.sfh.agincourt.actors.Zombie;
 
 public class PlayScreen extends ScreenAdapter {
@@ -33,8 +36,11 @@ public class PlayScreen extends ScreenAdapter {
     private Rectangle rectangle;
     public static Group zombies;
     public boolean isWaveActive = false;
+    public UiOverlay uiOverlay;
+    private InputMultiplexer im;
 
     public PlayScreen(Agincourt agincourt) {
+        UiOverlay uiOverlay = new UiOverlay();
         game = agincourt;
         OrthographicCamera camera = game.camera;
         viewport = game.viewport;
@@ -42,10 +48,10 @@ public class PlayScreen extends ScreenAdapter {
         zombies = new Group();
 //        zombies.setBounds(0, 0, game.VIEWPORT_WIDTH, game.VIEWPORT_HEIGHT);
         game.batch.setProjectionMatrix(camera.combined);
-
+        im = new InputMultiplexer(stage, uiOverlay);
         stage.addActor(new Background());
         stage.addActor(new Map1());
-
+        uiOverlay.createWindow();
         stage.addActor(zombies);
         stage.addListener(new InputListener() {
             @Override
@@ -53,8 +59,9 @@ public class PlayScreen extends ScreenAdapter {
                 Gdx.app.log("Stage Listener", "keyDown. keycode=" + keycode);
                 if (keycode == 42) {
                     zombies.addActor(new Zombie());
+                    return true;
                 }
-                return true;
+                return false;
             }
         });
 
@@ -68,7 +75,7 @@ public class PlayScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(im);
     }
 
     @Override
@@ -81,6 +88,8 @@ public class PlayScreen extends ScreenAdapter {
 //        Gdx.app.log("PlayScreen", "Zombies: " + zombies.getChildren().size);
 //        Gdx.app.log("PlayScreen", "HP: " + hp);
     }
+
+
 
     @Override
     public void hide() {
@@ -95,6 +104,8 @@ public class PlayScreen extends ScreenAdapter {
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, false);
     }
+
+
 
     class Map1 extends Actor {
         final Sprite mapSprite;

@@ -6,15 +6,19 @@
     "zombie": 10
   },
   {
-    "zombie": 15
+    "zombie": 15,
+    "superzombie": 3
   },
   {
-    "zombie": 20
+    "zombie": 20,
+    "superzombie": 5
   },
   {
-    "zombie": 25
+    "zombie": 20,
+    "superzombie": 10
   },
   {
-    "zombie": 30
+    "zombie": 20,
+    "superzombie": 20
   }
 ]

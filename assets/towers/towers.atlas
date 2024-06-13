@@ -1,0 +1,15 @@
+towers.png
+size:256,512
+repeat:none
+tower1
+bounds:110,166,106,162
+tower2
+bounds:110,330,106,162
+tower3
+bounds:2,330,106,162
+tower4
+bounds:2,2,106,162
+tower5
+bounds:2,166,106,162
+tower6
+bounds:110,2,106,162

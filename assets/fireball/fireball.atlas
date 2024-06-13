@@ -1,0 +1,14 @@
+fireball.png
+size:512,64
+repeat:none
+fireball1
+bounds:2,2,98,40
+fireball2
+bounds:196,2,92,40
+offsets:0,0,98,40
+fireball3
+bounds:102,2,92,40
+offsets:0,0,98,40
+fireball4
+bounds:290,2,86,40
+offsets:0,0,98,40
